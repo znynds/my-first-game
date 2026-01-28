@@ -1,16 +1,25 @@
 extends Area2D		#Y sort enable指根据y轴大小确认渲染的先后，即y越大其渲染优先级越高s
 
-@export var slime_speed : float = -60
+@export var slime_speed : float = randf_range(-70,-50)	#可变速度敌人
 @export var slime_animator : AnimatedSprite2D	#同player，创建一个控制动画的变量
 var is_dead : bool = false
+@export var special_enemy : float
+
 signal died(point)		#定义信号
 
 func _ready() -> void:
-	pass # Replace with function body.
+	special_enemy = randf()
+	if special_enemy <= 0.9:
+		return 
+	else:
+		position += Vector2(-100, 0)
 
 func _physics_process(delta: float) -> void:
 	if is_dead == false:
-		position += Vector2(slime_speed, 0) * delta 
+		if special_enemy <= 0.84:
+			position += Vector2(slime_speed, 0) * delta 
+		else:
+			position += Vector2(-140, 0) * delta
 	else:
 		await get_tree().create_timer(0.6).timeout
 		queue_free()
