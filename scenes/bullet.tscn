@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cv7cr4wlp8uhe"]
+
+[ext_resource type="Texture2D" uid="uid://v76gvq3kit21" path="res://asset/ullet.png" id="1_mkf8s"]
+[ext_resource type="Script" uid="uid://drpw4gwepdku2" path="res://scripts/bullet.gd" id="1_y25gk"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_y25gk"]
+radius = 13.810104
+height = 139.19916
+
+[node name="Area2D" type="Area2D" groups=["bullet"]]
+script = ExtResource("1_y25gk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-54.301937, 63.719997)
+scale = Vector2(0.33298832, 0.42875004)
+texture = ExtResource("1_mkf8s")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-55, 64)
+rotation = 1.5707964
+scale = Vector2(0.506875, 0.38793337)
+shape = SubResource("CapsuleShape2D_y25gk")

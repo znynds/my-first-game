@@ -1,0 +1,105 @@
+[gd_scene load_steps=7 format=3 uid="uid://cta4e7ewh4y1m"]
+
+[ext_resource type="Script" uid="uid://b61fujqi5u70j" path="res://scripts/game_manager.gd" id="1_4vge2"]
+[ext_resource type="Texture2D" uid="uid://hqs3500ncfvh" path="res://asset/forest.png" id="1_6e84v"]
+[ext_resource type="PackedScene" uid="uid://bm4xa3dbrpmgh" path="res://scenes/player.tscn" id="2_4dvvg"]
+[ext_resource type="PackedScene" uid="uid://tsnbhcq5f0m0" path="res://scenes/slime.tscn" id="3_rnjyy"]
+[ext_resource type="AudioStream" uid="uid://dxlbbsie68fxb" path="res://asset/audio/BGM.ogg" id="5_04qyp"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_4dvvg"]
+distance = -312.0
+
+[node name="Node2D" type="Node2D" node_paths=PackedStringArray("spawn_timer", "score_label", "game_over_label")]
+script = ExtResource("1_4vge2")
+slime_scene = ExtResource("3_rnjyy")
+spawn_timer = NodePath("Timer")
+score_label = NodePath("CanvasLayer/score")
+game_over_label = NodePath("CanvasLayer/game over")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-8.000021, -1.0000238)
+scale = Vector2(1.3627907, 1.165794)
+texture = ExtResource("1_6e84v")
+metadata/_edit_lock_ = true
+
+[node name="player" parent="." instance=ExtResource("2_4dvvg")]
+position = Vector2(-103, -84)
+
+[node name="barriers" type="Node" parent="."]
+
+[node name="bottom wall" type="StaticBody2D" parent="barriers"]
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="barriers/bottom wall"]
+shape = SubResource("WorldBoundaryShape2D_4dvvg")
+
+[node name="left wall" type="StaticBody2D" parent="barriers"]
+position = Vector2(-579, -315)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="barriers/left wall"]
+position = Vector2(314, 314)
+rotation = 1.5707964
+shape = SubResource("WorldBoundaryShape2D_4dvvg")
+
+[node name="right wall" type="StaticBody2D" parent="barriers"]
+position = Vector2(313, -12)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="barriers/right wall"]
+position = Vector2(-55, 13)
+rotation = -1.5707964
+shape = SubResource("WorldBoundaryShape2D_4dvvg")
+
+[node name="top wall" type="StaticBody2D" parent="barriers"]
+position = Vector2(128, -208)
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="barriers/top wall"]
+position = Vector2(-126, 195)
+rotation = 3.1415927
+shape = SubResource("WorldBoundaryShape2D_4dvvg")
+
+[node name="enemy" parent="." instance=ExtResource("3_rnjyy")]
+position = Vector2(287, -4)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="score" type="Label" parent="CanvasLayer"]
+offset_left = -5.0
+offset_top = 7.0
+offset_right = 195.0
+offset_bottom = 88.0
+theme_override_font_sizes/font_size = 42
+text = "Score:0"
+horizontal_alignment = 1
+
+[node name="game over" type="Label" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -114.0
+offset_top = -40.5
+offset_right = 114.0
+offset_bottom = 40.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 100
+text = "Game Over"
+horizontal_alignment = 1
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_04qyp")
+autoplay = true
+
+[connection signal="timeout" from="Timer" to="." method="_spawn_slime"]
