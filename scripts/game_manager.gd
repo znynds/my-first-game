@@ -20,7 +20,8 @@ func _score(point : int):
 
 func _show_game_over(dead : bool):
 	game_over_label.visible = true  # 确保节点有效时才设置显示
-		
+	await get_tree().create_timer(3).timeout	#需要知道tree指哪个树，如果是当前树的话，为何会把enemy一起重置？
+	get_tree().reload_current_scene()			#目前猜测为被链接到的那棵树
 
 func _process(delta: float) -> void:
 	if spawn_timer.wait_time >= 1.6:

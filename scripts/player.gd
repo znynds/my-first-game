@@ -35,8 +35,7 @@ func game_over():
 		animator.play("game_over")
 		emit_signal("player_died", true)  # 发射死亡信号
 		print("Player死亡，已发射player_died信号")  # 新增日志，验证信号发射
-		await get_tree().create_timer(3).timeout	#需要知道tree指哪个树，如果是当前树的话，为何会把enemy一起重置？
-		get_tree().reload_current_scene()			#目前猜测为被链接到的那棵树
+		
 
 
 func _fire() -> void:
