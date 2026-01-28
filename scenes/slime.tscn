@@ -98,7 +98,7 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_gstla"]
 radius = 26.0
 
-[node name="slime" type="Area2D" node_paths=PackedStringArray("slime_animator")]
+[node name="slime" type="Area2D" node_paths=PackedStringArray("slime_animator") groups=["enemy"]]
 z_as_relative = false
 y_sort_enabled = true
 script = ExtResource("1_p2gj0")

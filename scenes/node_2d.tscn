@@ -10,6 +10,7 @@
 distance = -312.0
 
 [node name="Node2D" type="Node2D" node_paths=PackedStringArray("spawn_timer", "score_label", "game_over_label")]
+z_as_relative = false
 script = ExtResource("1_4vge2")
 slime_scene = ExtResource("3_rnjyy")
 spawn_timer = NodePath("Timer")

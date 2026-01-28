@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 @export var speed : float = 150 #expert可以使得该变量可在右侧被修改	使用var来定义变量，冒号来确定变量类型（可省略）
 @export var animator : AnimatedSprite2D #定义一个类型为动画精灵的变量，后面可以用该类型的方法操作它
+@export var bullet_speed : float = 800
 var is_game_over : bool = false
 @export var bullet_scene : PackedScene	#将场景作为一种变量保存，可以操作被保存的场景中的节点（按照文档，好像只能保存直接拥有的节点，而不能保存孙节点）
 #接上行，此时packedscene没有被指定，还需要在监视器中（右边）将其设置为bullet场景
@@ -42,6 +43,8 @@ func _fire() -> void:
 	if velocity != Vector2.ZERO or is_game_over:	#不移动时发射子弹
 		return
 	$"fire sound".play()
-	var bullet_node = bullet_scene.instantiate()	#实例化子弹模板，即创建一个子弹实体
-	bullet_node.position = position + Vector2(150,-12)
-	get_tree().current_scene.add_child(bullet_node)	#在当前场景中加一个子节点，即子弹节点
+	# ✅ 修改：获取子弹后给子弹赋值速度（原代码未传递速度，子弹不会移动）
+	var bullet = BulletPool.get_bullet(position + Vector2(150,-12),Vector2(bullet_speed, 0))
+	if bullet: 
+		bullet.velocity = Vector2(bullet_speed, 0)
+	

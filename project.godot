@@ -16,9 +16,18 @@ run/main_scene="uid://cta4e7ewh4y1m"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+BulletPool="*res://scripts/bullet_pool.gd"
+
 [display]
 
 window/stretch/mode="canvas_items"
+
+[global_group]
+
+enemy=""
+bullet=""
 
 [input]
 

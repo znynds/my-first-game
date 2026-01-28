@@ -34,7 +34,6 @@ func _on_body_entered(body: Node2D) -> void:
 
 func _is_shoot(area: Area2D) -> void:	#检测是否与子弹碰撞
 	if area.is_in_group("bullet"):		#将子弹分组为bullet，此处分组是为了防止史莱姆和其他史莱姆碰撞时也被消灭
-		area.queue_free()
 		$"enemy died".play()
 		slime_animator.play("defeated")	#播放死亡动画
 		is_dead = true

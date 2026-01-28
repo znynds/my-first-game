@@ -1,0 +1,71 @@
+extends Node2D
+
+@export var bullet_scene : PackedScene
+@export var bullet_pool_size : int = 10
+var bullet_pool : Array[Area2D] = []
+var active_bullet : Array[Area2D] = []
+
+func _ready() -> void:
+	if not bullet_scene:
+		# --- 修改 1: 路径补全 ---
+		bullet_scene = load("res://scenes/bullet.tscn")
+		if not bullet_scene: return
+	
+	for x in range(bullet_pool_size):
+		_create_new_bullet_for_pool()
+	
+	print("✅ 子弹池初始化完成，当前预制数量: ", bullet_pool.size())
+
+# --- 修改 2: 提取创建函数 ---
+func _create_new_bullet_for_pool() -> Area2D:
+	var bullet = bullet_scene.instantiate()
+	bullet.visible = false
+	bullet.process_mode = Node.PROCESS_MODE_DISABLED
+	# 关键：设置 Z Index
+	if bullet is CanvasItem:
+		bullet.z_index = 99 
+	add_child(bullet)
+	bullet_pool.append(bullet)
+	return bullet
+
+func get_bullet(global_spawn_pos : Vector2, velocity : Vector2) -> Area2D:
+	var bullet : Area2D = null
+	
+	# --- 修改 3: 实例有效性检查 ---
+	while bullet_pool.size() > 0:
+		var b = bullet_pool.pop_back()
+		if is_instance_valid(b): 
+			bullet = b
+			break
+	
+	# 如果池空了，现场创建一个
+	if bullet == null:
+		bullet = _create_new_bullet_for_pool()
+		# 刚创建的会被加入池子，直接拿出来用
+		bullet = bullet_pool.pop_back() 
+	
+	# --- 修改 4: 全局坐标赋值 ---
+	bullet.global_position = global_spawn_pos
+	bullet.visible = true
+	bullet.process_mode = Node.PROCESS_MODE_INHERIT
+	
+	# --- 修改 5: 参数传递与计时重置 ---
+	bullet.set("velocity", velocity)
+	if bullet.has_method("reset_timer"):
+		bullet.reset_timer()
+		
+	active_bullet.append(bullet)
+	return bullet
+
+func recycle_bullet(bullet : Area2D) -> void:
+	# --- 修改 6: 安全回收逻辑 ---
+	if is_instance_valid(bullet) and bullet in active_bullet:
+		active_bullet.erase(bullet)
+		bullet.visible = false
+		
+		# --- 修改 7: 解决物理回调报错 ---
+		bullet.set_deferred("process_mode", Node.PROCESS_MODE_DISABLED)
+		
+		# 将回收的子弹移出视线范围
+		bullet.global_position = Vector2(-9999, -9999) 
+		bullet_pool.append(bullet)
